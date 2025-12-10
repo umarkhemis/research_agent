@@ -1,5 +1,5 @@
 import { apiClient } from './client';
-import { Project, ProjectPaper } from './types';
+import type { Project, ProjectPaper } from './types';
 
 export const projectsApi = {
   // List all projects

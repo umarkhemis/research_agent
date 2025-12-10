@@ -4,7 +4,7 @@ from groq import Groq
 from typing import Dict, Optional, List
 import config
 from utils.error_handler import logger, handle_errors, LLMError, ErrorContext
-from agents.cache_manager import cache
+from services.cache_service import cache
 
 
 class LLMAgent:
@@ -662,5 +662,4 @@ Paper text:
         return "\n\n".join(references)
 
 
-# Global LLM agent instance
-llm_agent = LLMAgent()
+# LLM agent can be instantiated when needed

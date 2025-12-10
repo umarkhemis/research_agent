@@ -4,7 +4,7 @@ import arxiv
 from typing import List, Dict, Optional
 import config
 from utils.error_handler import logger, handle_errors, APIError, ErrorContext
-from agents.cache_manager import cache
+from services.cache_service import cache
 from utils.deduplicator import deduplicator
 
 
@@ -333,6 +333,6 @@ class SearchAgent:
 
 
 # Global search agent instance
-search_agent = SearchAgent()
+# SearchAgent can be instantiated when needed
 
 

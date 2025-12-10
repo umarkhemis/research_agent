@@ -4,7 +4,7 @@ import io
 from typing import Optional
 import config
 from utils.error_handler import logger, handle_errors, PDFProcessingError, ErrorContext
-from agents.cache_manager import cache
+from services.cache_service import cache
 
 
 class PDFAgent:
@@ -209,4 +209,4 @@ class PDFAgent:
 
 
 # Global PDF agent instance
-pdf_agent = PDFAgent()
+# PDFAgent can be instantiated when needed

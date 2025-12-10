@@ -16,7 +16,7 @@ python-dotenv==1.0.0
 
 # API & Processing
 requests==2.31.0
-groq==0.4.3
+groq==0.37.1
 arxiv==2.1.0
 
 # PDF Processing

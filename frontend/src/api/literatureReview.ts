@@ -1,5 +1,5 @@
 import { apiClient } from './client';
-import { LiteratureReview, LiteratureReviewRequest } from './types';
+import type { LiteratureReview, LiteratureReviewRequest } from './types';
 
 export const literatureReviewApi = {
   // Generate literature review

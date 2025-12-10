@@ -420,4 +420,4 @@ class ExportAgent:
 
 
 # Global export agent instance
-export_agent = ExportAgent()
+# ExportAgent can be instantiated when needed

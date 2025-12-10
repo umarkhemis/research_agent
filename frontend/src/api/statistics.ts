@@ -1,5 +1,5 @@
 import { apiClient } from './client';
-import { DashboardStats } from './types';
+import type { DashboardStats } from './types';
 
 export const statisticsApi = {
   // Get dashboard statistics

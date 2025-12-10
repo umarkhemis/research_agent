@@ -1,5 +1,5 @@
 import { apiClient } from './client';
-import { Paper, SearchRequest, SearchResponse } from './types';
+import type { Paper, SearchRequest, SearchResponse } from './types';
 
 export const papersApi = {
   // Search papers

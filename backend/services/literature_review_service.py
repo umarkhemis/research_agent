@@ -1,18 +1,16 @@
 from typing import List, Dict, Optional
 from datetime import datetime
-from agents.llm_agent import llm_agent
-from agents.export_agent import export_agent
+from services.llm_service import LLMAgent
+from services.export_service import ExportAgent
 from utils.error_handler import logger, handle_errors, ErrorContext
-from database.database import db
-from database.models import LiteratureReview
 
 
 class LiteratureReviewAgent:
     """Orchestrates literature review generation"""
     
     def __init__(self):
-        self.llm_agent = llm_agent
-        self.export_agent = export_agent
+        self.llm_agent = LLMAgent()
+        self.export_agent = ExportAgent()
         logger.info("Literature Review Agent initialized")
     
     @handle_errors#(default_return=None)

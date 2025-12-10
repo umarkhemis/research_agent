@@ -241,5 +241,19 @@ class CacheManager:
         """Cache topic search results"""
         self.set(key, value)
 
-# Global cache manager instance
-cache = CacheManager()
+# Global cache manager instance (lazy initialization)
+_cache_instance = None
+
+def get_cache():
+    global _cache_instance
+    if _cache_instance is None:
+        _cache_instance = CacheManager()
+    return _cache_instance
+
+# For backwards compatibility
+cache = type('CacheProxy', (), {
+    'get_topic_cache': lambda self, *args, **kwargs: get_cache().get_topic_cache(*args, **kwargs),
+    'set_topic_cache': lambda self, *args, **kwargs: get_cache().set_topic_cache(*args, **kwargs),
+    'get': lambda self, *args, **kwargs: get_cache().get(*args, **kwargs),
+    'set': lambda self, *args, **kwargs: get_cache().set(*args, **kwargs),
+})()
