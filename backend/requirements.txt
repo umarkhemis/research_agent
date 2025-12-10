@@ -1,0 +1,32 @@
+# Django Core
+Django==4.2.8
+djangorestframework==3.14.0
+django-cors-headers==4.3.1
+
+# Database
+psycopg2-binary==2.9.9
+dj-database-url==2.1.0
+
+# Deployment
+gunicorn==21.2.0
+whitenoise==6.6.0
+
+# Environment
+python-dotenv==1.0.0
+
+# API & Processing
+requests==2.31.0
+groq==0.37.1
+arxiv==2.1.0
+
+# PDF Processing
+PyPDF2==3.0.1
+
+# Export Functionality
+python-docx==1.1.0
+reportlab==4.0.7
+bibtexparser==1.4.1
+
+# Utilities
+fuzzywuzzy==0.18.0
+python-Levenshtein==0.23.0
