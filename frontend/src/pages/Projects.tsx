@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FolderOpen, Plus, Edit, Trash2 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { projectsApi } from '../api/projects';
@@ -9,6 +10,7 @@ import { Loading } from '../components/common/Loading';
 import toast from 'react-hot-toast';
 
 export const Projects: React.FC = () => {
+  const navigate = useNavigate();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<any>(null);
   const [formData, setFormData] = useState({ name: '', description: '', tags: '' });
@@ -132,7 +134,8 @@ export const Projects: React.FC = () => {
           {projects.map((project) => (
             <div
               key={project.id}
-              className="card-3d shine-effect bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700"
+              className="card-3d shine-effect bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 cursor-pointer"
+              onClick={() => navigate(`/projects/${project.id}`)}
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
@@ -150,13 +153,19 @@ export const Projects: React.FC = () => {
                 </div>
                 <div className="flex gap-1">
                   <button
-                    onClick={() => handleEdit(project)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEdit(project);
+                    }}
                     className="p-2 text-gray-400 hover:text-primary transition-colors"
                   >
                     <Edit className="w-4 h-4" />
                   </button>
                   <button
-                    onClick={() => handleDelete(project.id, project.name)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(project.id, project.name);
+                    }}
                     className="p-2 text-gray-400 hover:text-red-600 transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />

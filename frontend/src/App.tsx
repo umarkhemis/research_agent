@@ -5,6 +5,7 @@ import { Layout } from './components/layout/Layout';
 import { Dashboard } from './pages/Dashboard';
 import { Search } from './pages/Search';
 import { Projects } from './pages/Projects';
+import { ProjectDetail } from './pages/ProjectDetail';
 import { LiteratureReview } from './pages/LiteratureReview';
 import { Settings } from './pages/Settings';
 import { useThemeStore } from './store';
@@ -37,6 +38,7 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="search" element={<Search />} />
             <Route path="projects" element={<Projects />} />
+            <Route path="projects/:id" element={<ProjectDetail />} />
             <Route path="literature-review" element={<LiteratureReview />} />
             <Route path="settings" element={<Settings />} />
           </Route>

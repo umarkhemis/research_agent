@@ -100,7 +100,7 @@ export const LiteratureReview: React.FC = () => {
                 focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="">Choose a project...</option>
-              {projects?.map((project) => (
+              {Array.isArray(projects) && projects.map((project) => (
                 <option key={project.id} value={project.id}>
                   {project.name} ({project.papers_count} papers)
                 </option>

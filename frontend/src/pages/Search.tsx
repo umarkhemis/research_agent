@@ -235,7 +235,7 @@ export const Search: React.FC = () => {
       )}
 
       {/* Save to Project */}
-      {results.length > 0 && projects && projects.length > 0 && (
+      {results.length > 0 && Array.isArray(projects) && projects.length > 0 && (
         <div className="glass-effect p-4 rounded-lg">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Save results to project (optional)
