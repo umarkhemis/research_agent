@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Search as SearchIcon, Filter, X } from 'lucide-react';
-import { useMutation } from '@tanstack/react-query';
+import { Search as SearchIcon, Filter, X, Lightbulb, Eye } from 'lucide-react';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { papersApi } from '../api/papers';
+import { projectsApi } from '../api/projects';
 import { Button } from '../components/common/Button';
 import { Input } from '../components/common/Input';
 import { Loading } from '../components/common/Loading';
+import { PaperDetail } from '../components/papers/PaperDetail';
 import toast from 'react-hot-toast';
 import type { Paper } from '../api/types';
 
@@ -19,6 +21,21 @@ export const Search: React.FC = () => {
     openAccessOnly: false,
   });
   const [results, setResults] = useState<Paper[]>([]);
+  const [selectedPaper, setSelectedPaper] = useState<Paper | null>(null);
+  const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
+
+  const { data: projects } = useQuery({
+    queryKey: ['projects'],
+    queryFn: projectsApi.list,
+  });
+
+  const exampleQueries = [
+    'transformer models in natural language processing',
+    'CRISPR gene editing applications',
+    'quantum computing algorithms',
+    'climate change machine learning',
+    'deep learning protein structure prediction',
+  ];
 
   const searchMutation = useMutation({
     mutationFn: papersApi.search,
@@ -193,6 +210,52 @@ export const Search: React.FC = () => {
         )}
       </form>
 
+      {/* Example Queries */}
+      {!query && results.length === 0 && (
+        <div className="card-3d bg-gradient-to-br from-primary/5 to-secondary/5 dark:from-primary/10 dark:to-secondary/10 rounded-xl p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Lightbulb className="w-5 h-5 text-primary" />
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+              Example Queries
+            </h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {exampleQueries.map((example, idx) => (
+              <button
+                key={idx}
+                onClick={() => setQuery(example)}
+                className="text-left p-3 rounded-lg bg-white/50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800 
+                  border border-gray-200 dark:border-gray-700 transition-all hover:scale-105 transform"
+              >
+                <span className="text-sm text-gray-700 dark:text-gray-300">{example}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Save to Project */}
+      {results.length > 0 && projects && projects.length > 0 && (
+        <div className="glass-effect p-4 rounded-lg">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Save results to project (optional)
+          </label>
+          <select
+            value={selectedProjectId || ''}
+            onChange={(e) => setSelectedProjectId(e.target.value ? parseInt(e.target.value) : null)}
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 
+              bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+          >
+            <option value="">Don't save</option>
+            {projects.map((project) => (
+              <option key={project.id} value={project.id}>
+                {project.name} ({project.papers_count} papers)
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
       {/* Loading State */}
       {searchMutation.isPending && <Loading text="Searching papers..." />}
 
@@ -206,9 +269,9 @@ export const Search: React.FC = () => {
             {results.map((paper) => (
               <div
                 key={paper.id}
-                className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
+                className="card-3d shine-effect bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700"
               >
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 hover:text-primary transition-colors cursor-pointer">
                   {paper.title}
                 </h3>
                 <div className="text-sm text-gray-600 dark:text-gray-400 mb-3">
@@ -223,18 +286,28 @@ export const Search: React.FC = () => {
                     {paper.abstract}
                   </p>
                 )}
-                <div className="flex items-center gap-4 flex-wrap">
-                  <span className="text-sm px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full">
-                    {paper.citation_count} citations
-                  </span>
-                  {paper.has_pdf && (
-                    <span className="text-sm px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full">
-                      PDF Available
+                <div className="flex items-center justify-between gap-4 flex-wrap">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full">
+                      {paper.citation_count} citations
                     </span>
-                  )}
-                  <span className="text-sm px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
-                    {paper.source}
-                  </span>
+                    {paper.has_pdf && (
+                      <span className="text-sm px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full">
+                        PDF Available
+                      </span>
+                    )}
+                    <span className="text-sm px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
+                      {paper.source}
+                    </span>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    icon={<Eye className="w-4 h-4" />}
+                    onClick={() => setSelectedPaper(paper)}
+                  >
+                    View Details
+                  </Button>
                 </div>
               </div>
             ))}
@@ -252,14 +325,13 @@ export const Search: React.FC = () => {
         </div>
       )}
 
-      {/* Empty State */}
-      {!query && results.length === 0 && (
-        <div className="text-center py-12">
-          <SearchIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600 dark:text-gray-400">
-            Enter a search query to find academic papers
-          </p>
-        </div>
+      {/* Paper Detail Modal */}
+      {selectedPaper && (
+        <PaperDetail
+          paper={selectedPaper}
+          isOpen={!!selectedPaper}
+          onClose={() => setSelectedPaper(null)}
+        />
       )}
     </div>
   );

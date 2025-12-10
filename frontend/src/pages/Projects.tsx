@@ -132,7 +132,7 @@ export const Projects: React.FC = () => {
           {projects.map((project) => (
             <div
               key={project.id}
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
+              className="card-3d shine-effect bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">

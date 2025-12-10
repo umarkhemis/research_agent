@@ -82,7 +82,7 @@ export const LiteratureReview: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Configuration Panel */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 space-y-6">
+        <div className="card-3d glass-effect bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 space-y-6">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
             Configuration
           </h2>
@@ -195,7 +195,7 @@ export const LiteratureReview: React.FC = () => {
         </div>
 
         {/* Preview Panel */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+        <div className="card-3d glass-effect bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
               Preview

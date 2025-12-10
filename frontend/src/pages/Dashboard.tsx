@@ -83,9 +83,9 @@ export const Dashboard: React.FC = () => {
           <div
             key={stat.title}
             onClick={stat.onClick}
-            className={`bg-gradient-to-br ${stat.color} rounded-xl p-6 text-white shadow-lg ${
-              stat.onClick ? 'cursor-pointer hover:scale-105' : ''
-            } transition-transform`}
+            className={`card-3d pulse-glow bg-gradient-to-br ${stat.color} rounded-xl p-6 text-white ${
+              stat.onClick ? 'cursor-pointer hover:scale-110' : ''
+            } transition-all transform`}
           >
             <div className="flex items-center justify-between">
               <div>
