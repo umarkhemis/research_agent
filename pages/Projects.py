@@ -3,6 +3,10 @@ from datetime import datetime
 from database.database import db
 from agents.export_agent import export_agent
 from utils.error_handler import logger
+import sys
+sys.path.append('..')
+from components.navbar import render_navbar
+from components.footer import render_footer
 
 st.set_page_config(page_title="Projects", page_icon=None, layout="wide")
 
@@ -60,6 +64,8 @@ if 'show_create_form' not in st.session_state:
 
 
 def main():
+    render_navbar(current_page="Projects")
+    
     st.title("Research Projects")
     st.markdown("Organize and manage your research papers")
     
@@ -97,6 +103,9 @@ def main():
         show_project_details()
     else:
         show_projects_list()
+    
+    # Render footer
+    render_footer()
 
 
 def show_create_project_form():

@@ -4,6 +4,10 @@ from agents.cache_manager import cache
 from database.database import db
 from utils.error_handler import logger
 import os
+import sys
+sys.path.append('..')
+from components.navbar import render_navbar
+from components.footer import render_footer
 
 st.set_page_config(page_title="Settings", page_icon=None, layout="wide")
 
@@ -39,6 +43,8 @@ st.markdown("""
 
 
 def main():
+    render_navbar(current_page="Settings")
+    
     st.title("Settings & Configuration")
     st.markdown("Manage your application settings and preferences")
     
@@ -59,6 +65,9 @@ def main():
     
     with tabs[4]:  # About
         show_about_info()
+    
+    # Render footer
+    render_footer()
 
 
 def show_appearance_settings():

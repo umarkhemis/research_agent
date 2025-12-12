@@ -4,6 +4,10 @@ import config
 from database.database import db
 from agents.literature_review_agent import lit_review_agent
 from utils.error_handler import logger
+import sys
+sys.path.append('..')
+from components.navbar import render_navbar
+from components.footer import render_footer
 
 st.set_page_config(page_title="Literature Review", page_icon=None, layout="wide")
 
@@ -54,6 +58,8 @@ if 'review_papers' not in st.session_state:
 
 
 def main():
+    render_navbar(current_page="Review")
+    
     st.title("Literature Review Generator")
     st.markdown("Generate comprehensive literature reviews in minutes, powered by AI")
     
@@ -155,6 +161,9 @@ def main():
         show_review_results(st.session_state.generated_review)
     else:
         show_generation_interface(detail_level, review_type, save_to_db)
+    
+    # Render footer
+    render_footer()
 
 
 def show_getting_started():

@@ -9,6 +9,10 @@ from agents.export_agent import export_agent
 from database.database import db
 from utils.error_handler import logger
 import io
+import sys
+sys.path.append('..')
+from components.navbar import render_navbar
+from components.footer import render_footer
 
 st.set_page_config(page_title="Search Papers", page_icon=None, layout="wide")
 
@@ -63,6 +67,8 @@ if 'current_project' not in st.session_state:
     st.session_state.current_project = None
 
 def main():
+    render_navbar(current_page="Search")
+    
     st.title("Search Academic Papers")
     st.markdown("Search across multiple databases with AI-powered analysis")
     
@@ -372,6 +378,9 @@ def display_paper(paper, index):
                 st.text_area("Citation", citation, height=100, key=f"cite_{index}")
         
         st.divider()
+    
+    # Render footer
+    render_footer()
 
 
 def export_single_paper(paper, format_type):

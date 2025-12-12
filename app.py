@@ -4,6 +4,8 @@ from datetime import datetime
 from database.database import db
 from utils.error_handler import logger
 import plotly.graph_objects as go
+from components.navbar import render_navbar
+from components.footer import render_footer
 
 # Page configuration
 st.set_page_config(
@@ -470,6 +472,9 @@ with st.sidebar:
 
 # Main content
 def main():
+    # Render navbar
+    render_navbar(current_page="Home")
+    
     # Hero section
     st.markdown('<div class="main-header">ResearchHub Pro</div>', unsafe_allow_html=True)
     st.markdown(
@@ -677,6 +682,9 @@ def main():
                 </div>
             </div>
         """, unsafe_allow_html=True)
+    
+    # Render footer
+    render_footer()
 
 if __name__ == "__main__":
     main()
