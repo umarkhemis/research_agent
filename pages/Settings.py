@@ -5,7 +5,7 @@ from database.database import db
 from utils.error_handler import logger
 import os
 
-st.set_page_config(page_title="Settings", page_icon="⚙️", layout="wide")
+st.set_page_config(page_title="Settings", page_icon=None, layout="wide")
 
 # Apply dark mode if enabled
 if st.session_state.get('dark_mode', False):
@@ -18,6 +18,7 @@ if st.session_state.get('dark_mode', False):
 
 # Custom CSS
 st.markdown("""
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
     .settings-section {
         background-color: var(--background-color);
@@ -38,11 +39,11 @@ st.markdown("""
 
 
 def main():
-    st.title("⚙️ Settings & Configuration")
+    st.title("Settings & Configuration")
     st.markdown("Manage your application settings and preferences")
     
     # Tabs for different settings categories
-    tabs = st.tabs(["🎨 Appearance", "🔧 Configuration", "📦 Cache", "💾 Database", "ℹ️ About"])
+    tabs = st.tabs(["Appearance", "Configuration", "Cache", "Database", "About"])
     
     with tabs[0]:  # Appearance
         show_appearance_settings()
@@ -62,12 +63,12 @@ def main():
 
 def show_appearance_settings():
     """Appearance and UI settings"""
-    st.header("🎨 Appearance Settings")
+    st.header("Appearance Settings")
     
     st.markdown('<div class="settings-section">', unsafe_allow_html=True)
     
     # Dark mode toggle
-    st.subheader("🌙 Dark Mode")
+    st.subheader("Dark Mode")
     
     col1, col2 = st.columns([3, 1])
     with col1:
@@ -84,18 +85,18 @@ def show_appearance_settings():
     
     # UI preferences (for future expansion)
     st.markdown('<div class="settings-section">', unsafe_allow_html=True)
-    st.subheader("🖼️ UI Preferences")
-    st.info("🚧 Additional UI customization options coming soon!")
+    st.subheader("UI Preferences")
+    st.info("Additional UI customization options coming soon!")
     st.markdown('</div>', unsafe_allow_html=True)
 
 
 def show_configuration_settings():
     """Application configuration"""
-    st.header("🔧 Configuration Settings")
+    st.header("Configuration Settings")
     
     # Search defaults
     st.markdown('<div class="settings-section">', unsafe_allow_html=True)
-    st.subheader("🔍 Search Defaults")
+    st.subheader("Search Defaults")
     
     default_limit = st.number_input(
         "Default number of papers",
@@ -122,7 +123,7 @@ def show_configuration_settings():
     
     # Literature review defaults
     st.markdown('<div class="settings-section">', unsafe_allow_html=True)
-    st.subheader("📝 Literature Review Defaults")
+    st.subheader("Literature Review Defaults")
     
     default_review_type = st.selectbox(
         "Default review type",
@@ -135,29 +136,29 @@ def show_configuration_settings():
     
     # API configuration
     st.markdown('<div class="settings-section">', unsafe_allow_html=True)
-    st.subheader("🔑 API Configuration")
+    st.subheader("API Configuration")
     
-    groq_key_status = "✅ Configured" if config.GROQ_API_KEY else "❌ Not configured"
+    groq_key_status = "Configured" if config.GROQ_API_KEY else "Not configured"
     st.write(f"**Groq API Key:** {groq_key_status}")
     
-    semantic_key_status = "✅ Configured" if config.SEMANTIC_SCHOLAR_API_KEY else "ℹ️ Optional (not set)"
+    semantic_key_status = "Configured" if config.SEMANTIC_SCHOLAR_API_KEY else "Optional (not set)"
     st.write(f"**Semantic Scholar API Key:** {semantic_key_status}")
     
-    st.info("💡 API keys are configured in the `.env` file. See documentation for setup instructions.")
+    st.info("API keys are configured in the `.env` file. See documentation for setup instructions.")
     
     st.markdown('</div>', unsafe_allow_html=True)
 
 
 def show_cache_management():
     """Cache management interface"""
-    st.header("📦 Cache Management")
+    st.header("Cache Management")
     
     try:
         cache_stats = cache.get_cache_stats()
         
         # Cache statistics
         st.markdown('<div class="settings-section">', unsafe_allow_html=True)
-        st.subheader("📊 Cache Statistics")
+        st.subheader("Cache Statistics")
         
         col1, col2, col3 = st.columns(3)
         with col1:
@@ -171,38 +172,38 @@ def show_cache_management():
         
         # Cache actions
         st.markdown('<div class="settings-section">', unsafe_allow_html=True)
-        st.subheader("🔧 Cache Actions")
+        st.subheader("Cache Actions")
         
         col1, col2 = st.columns(2)
         
         with col1:
             st.write("**Clear Expired Cache**")
             st.caption(f"Remove items older than {config.CACHE_EXPIRY_DAYS} days")
-            if st.button("🗑️ Clear Expired", use_container_width=True):
+            if st.button("Clear Expired", use_container_width=True):
                 removed = cache.clear_expired_cache()
                 total_removed = sum(removed.values())
-                st.success(f"✅ Removed {total_removed} expired items")
+                st.success(f"Removed {total_removed} expired items")
                 st.rerun()
         
         with col2:
             st.write("**Clear All Cache**")
             st.caption("Remove all cached data")
-            if st.button("⚠️ Clear All", type="secondary", use_container_width=True):
+            if st.button("Clear All", type="secondary", use_container_width=True):
                 if st.session_state.get('confirm_clear_cache'):
                     removed = cache.clear_all_cache()
                     total_removed = sum(removed.values())
-                    st.success(f"✅ Cleared {total_removed} items")
+                    st.success(f"Cleared {total_removed} items")
                     st.session_state.confirm_clear_cache = False
                     st.rerun()
                 else:
                     st.session_state.confirm_clear_cache = True
-                    st.warning("⚠️ Click again to confirm")
+                    st.warning("Click again to confirm")
         
         st.markdown('</div>', unsafe_allow_html=True)
         
         # Cache benefits
         st.markdown('<div class="settings-section">', unsafe_allow_html=True)
-        st.subheader("💡 Cache Benefits")
+        st.subheader("Cache Benefits")
         st.markdown("""
         - **Faster searches:** Repeated queries return instantly
         - **Reduced API calls:** Saves rate limits
@@ -220,14 +221,14 @@ def show_cache_management():
 
 def show_database_management():
     """Database management interface"""
-    st.header("💾 Database Management")
+    st.header("Database Management")
     
     try:
         stats = db.get_statistics()
         
         # Database statistics
         st.markdown('<div class="settings-section">', unsafe_allow_html=True)
-        st.subheader("📊 Database Statistics")
+        st.subheader("Database Statistics")
         
         col1, col2, col3, col4 = st.columns(4)
         with col1:
@@ -243,7 +244,7 @@ def show_database_management():
         
         # Database info
         st.markdown('<div class="settings-section">', unsafe_allow_html=True)
-        st.subheader("ℹ️ Database Information")
+        st.subheader("Database Information")
         
         database_url = os.getenv('DATABASE_URL', 'sqlite:///./research_agent.db')
         db_type = "PostgreSQL" if database_url.startswith('postgresql') else "SQLite"
@@ -255,11 +256,11 @@ def show_database_management():
         
         # Danger zone
         st.markdown('<div class="danger-zone">', unsafe_allow_html=True)
-        st.subheader("⚠️ Danger Zone")
+        st.subheader("Danger Zone")
         st.warning("These actions are irreversible!")
         
-        if st.button("🗑️ Reset Database", type="secondary"):
-            st.error("⚠️ This feature is disabled for safety. To reset the database, delete the database file manually.")
+        if st.button("Reset Database", type="secondary"):
+            st.error("This feature is disabled for safety. To reset the database, delete the database file manually.")
         
         st.markdown('</div>', unsafe_allow_html=True)
         
@@ -270,11 +271,11 @@ def show_database_management():
 
 def show_about_info():
     """About and system information"""
-    st.header("ℹ️ About AI Research Agent")
+    st.header("About AI Research Agent")
     
     # Application info
     st.markdown('<div class="settings-section">', unsafe_allow_html=True)
-    st.subheader("📱 Application Information")
+    st.subheader("Application Information")
     
     col1, col2 = st.columns(2)
     
@@ -292,7 +293,7 @@ def show_about_info():
     
     # Features
     st.markdown('<div class="settings-section">', unsafe_allow_html=True)
-    st.subheader("✨ Features")
+    st.subheader("Features")
     
     col1, col2 = st.columns(2)
     
@@ -320,7 +321,7 @@ def show_about_info():
     
     # System requirements
     st.markdown('<div class="settings-section">', unsafe_allow_html=True)
-    st.subheader("💻 System Requirements")
+    st.subheader("System Requirements")
     
     st.markdown("""
     **Minimum:**
@@ -340,7 +341,7 @@ def show_about_info():
     
     # Credits
     st.markdown('<div class="settings-section">', unsafe_allow_html=True)
-    st.subheader("🙏 Credits & Acknowledgments")
+    st.subheader("Credits & Acknowledgments")
     
     st.markdown("""
     **Built with:**
@@ -359,7 +360,7 @@ def show_about_info():
     
     # Links
     st.markdown('<div class="settings-section">', unsafe_allow_html=True)
-    st.subheader("🔗 Useful Links")
+    st.subheader("Useful Links")
     
     col1, col2, col3 = st.columns(3)
     
@@ -385,7 +386,7 @@ def show_about_info():
     
     # Footer
     st.markdown("---")
-    st.caption("🔬 ResearchHub - Making research accessible to everyone")
+    st.caption("ResearchHub - Making research accessible to everyone")
     st.caption("© 2025 - Open Source Project")
 
 

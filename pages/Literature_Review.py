@@ -5,7 +5,7 @@ from database.database import db
 from agents.literature_review_agent import lit_review_agent
 from utils.error_handler import logger
 
-st.set_page_config(page_title="Literature Review", page_icon="📝", layout="wide")
+st.set_page_config(page_title="Literature Review", page_icon=None, layout="wide")
 
 # Apply dark mode if enabled
 if st.session_state.get('dark_mode', False):
@@ -18,6 +18,7 @@ if st.session_state.get('dark_mode', False):
 
 # Custom CSS
 st.markdown("""
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
     .review-preview {
         background-color: var(--background-color);
@@ -53,15 +54,15 @@ if 'review_papers' not in st.session_state:
 
 
 def main():
-    st.title("📝 Literature Review Generator")
+    st.title("Literature Review Generator")
     st.markdown("Generate comprehensive literature reviews in minutes, powered by AI")
     
     # Sidebar configuration
     with st.sidebar:
-        st.header("⚙️ Review Configuration")
+        st.header("Review Configuration")
         
         # Source selection
-        st.subheader("📚 Paper Source")
+        st.subheader("Paper Source")
         source = st.radio(
             "Select papers from",
             ["Recent Search", "Saved Project", "Custom Selection"],
@@ -73,7 +74,7 @@ def main():
         if source == "Recent Search":
             if st.session_state.get('search_results'):
                 selected_papers = st.session_state.search_results
-                st.success(f"✅ {len(selected_papers)} papers from last search")
+                st.success(f"{len(selected_papers)} papers from last search")
             else:
                 st.warning("No recent search. Go to Search page first.")
         
@@ -103,7 +104,7 @@ def main():
                     }
                     selected_papers.append(paper_dict)
                 
-                st.success(f"✅ {len(selected_papers)} papers from project")
+                st.success(f"{len(selected_papers)} papers from project")
             else:
                 st.warning("No projects yet. Create one first.")
         
@@ -112,7 +113,7 @@ def main():
         st.divider()
         
         # Review settings
-        st.subheader("🎯 Review Settings")
+        st.subheader("Review Settings")
         
         detail_level = st.select_slider(
             "Detail Level",
@@ -132,7 +133,7 @@ def main():
         st.divider()
         
         # Additional options
-        st.subheader("💾 Options")
+        st.subheader("Options")
         save_to_db = st.checkbox("Save to database", value=True)
         
         if save_to_db:
@@ -170,12 +171,12 @@ def show_getting_started():
     
     ### What You Get:
     
-    - 📝 Introduction with context and scope
-    - 🎯 Thematic analysis of papers
-    - 🔬 Methodological approaches overview
-    - 💡 Synthesis of key findings
-    - 🔍 Research gaps and future directions
-    - 📚 Conclusion and references
+    - Introduction with context and scope
+    - Thematic analysis of papers
+    - Methodological approaches overview
+    - Synthesis of key findings
+    - Research gaps and future directions
+    - Conclusion and references
     
     **Time savings:** Write in 10 minutes what takes 30-50 hours manually!
     """)
@@ -186,13 +187,13 @@ def show_getting_started():
     col1, col2 = st.columns(2)
     
     with col1:
-        st.subheader("🔍 Start with Search")
+        st.subheader("Start with Search")
         st.write("Search for papers and generate review from results")
         if st.button("Go to Search →", use_container_width=True):
             st.switch_page("pages/Search.py")
     
     with col2:
-        st.subheader("📚 Use Existing Project")
+        st.subheader("Use Existing Project")
         st.write("Generate review from papers in your projects")
         if st.button("Go to Projects →", use_container_width=True):
             st.switch_page("pages/Projects.py")
@@ -203,7 +204,7 @@ def show_generation_interface(detail_level, review_type, save_to_db):
     papers = st.session_state.review_papers
     
     # Paper preview
-    st.header(f"📚 Selected Papers ({len(papers)})")
+    st.header(f"Selected Papers ({len(papers)})")
     
     # Paper quality check
     papers_with_summaries = sum(1 for p in papers if p.get('abstract_summary') or p.get('abstract'))
@@ -221,10 +222,10 @@ def show_generation_interface(detail_level, review_type, save_to_db):
         st.metric("Quality Score", f"{quality_score}%")
     
     if quality_score < 50:
-        st.warning("⚠️ Low quality score. Consider processing PDFs for better results.")
+        st.warning("Low quality score. Consider processing PDFs for better results.")
     
     # Paper list preview
-    with st.expander("📄 View Paper List"):
+    with st.expander("View Paper List"):
         for i, paper in enumerate(papers[:10], 1):
             st.write(f"{i}. **{paper.get('title', 'Untitled')}** ({paper.get('year', 'N/A')})")
         if len(papers) > 10:
@@ -233,7 +234,7 @@ def show_generation_interface(detail_level, review_type, save_to_db):
     st.divider()
     
     # Review configuration preview
-    st.header("⚙️ Review Configuration")
+    st.header("Review Configuration")
     
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -262,7 +263,7 @@ def show_generation_interface(detail_level, review_type, save_to_db):
     st.divider()
     
     # Generate button
-    st.header("🚀 Generate Review")
+    st.header("Generate Review")
     
     # Topic input
     topic = st.text_input(
@@ -274,11 +275,11 @@ def show_generation_interface(detail_level, review_type, save_to_db):
     col1, col2, col3 = st.columns([2, 1, 1])
     
     with col1:
-        if st.button("✨ Generate Literature Review", type="primary", use_container_width=True):
+        if st.button("Generate Literature Review", type="primary", use_container_width=True):
             if not topic:
-                st.error("⚠️ Please enter a review topic")
+                st.error("Please enter a review topic")
             elif len(papers) < 3:
-                st.error("⚠️ Need at least 3 papers to generate a review")
+                st.error("Need at least 3 papers to generate a review")
             else:
                 generate_review(topic, papers, detail_level, review_type, save_to_db)
     
@@ -286,23 +287,23 @@ def show_generation_interface(detail_level, review_type, save_to_db):
         st.caption("")  # Spacing
     
     with col3:
-        st.caption("⏱️ Est. time: 1-2 min")
+        st.caption("Est. time: 1-2 min")
 
 
 def generate_review(topic, papers, detail_level, review_type, save_to_db):
     """Generate the literature review"""
     
-    with st.spinner("🤖 Generating literature review... This may take 1-2 minutes..."):
+    with st.spinner("Generating literature review... This may take 1-2 minutes..."):
         progress_bar = st.progress(0)
         status_text = st.empty()
         
         try:
             # Step 1: Detect themes
-            status_text.text("🔍 Detecting themes across papers...")
+            status_text.text("Detecting themes across papers...")
             progress_bar.progress(20)
             
             # Step 2: Generate review
-            status_text.text("✍️ Writing literature review sections...")
+            status_text.text("Writing literature review sections...")
             progress_bar.progress(40)
             
             project_id = st.session_state.get('review_project')
@@ -317,22 +318,22 @@ def generate_review(topic, papers, detail_level, review_type, save_to_db):
             )
             
             progress_bar.progress(80)
-            status_text.text("📝 Finalizing review...")
+            status_text.text("Finalizing review...")
             
             progress_bar.progress(100)
-            status_text.text("✅ Review generated successfully!")
+            status_text.text("Review generated successfully!")
             
             st.session_state.generated_review = review_result
             st.rerun()
             
         except Exception as e:
-            st.error(f"❌ Generation failed: {str(e)}")
+            st.error(f"Generation failed: {str(e)}")
             logger.error(f"Literature review generation error: {str(e)}")
 
 
 def show_review_results(review_result):
     """Display the generated review"""
-    st.success("✅ Literature Review Generated!")
+    st.success("Literature Review Generated!")
     
     # Statistics
     col1, col2, col3, col4 = st.columns(4)
@@ -349,31 +350,31 @@ def show_review_results(review_result):
     st.divider()
     
     # Export options
-    st.header("💾 Export Review")
+    st.header("Export Review")
     
     col1, col2, col3, col4, col5 = st.columns(5)
     
     with col1:
-        if st.button("📄 Word", use_container_width=True):
+        if st.button("Word", use_container_width=True):
             export_review(review_result, "word")
     with col2:
-        if st.button("📑 PDF", use_container_width=True):
+        if st.button("PDF", use_container_width=True):
             export_review(review_result, "pdf")
     with col3:
-        if st.button("📝 Markdown", use_container_width=True):
+        if st.button("Markdown", use_container_width=True):
             export_review(review_result, "markdown")
     with col4:
-        if st.button("📐 LaTeX", use_container_width=True):
+        if st.button("LaTeX", use_container_width=True):
             export_review(review_result, "latex")
     with col5:
-        if st.button("🔄 Start New", use_container_width=True):
+        if st.button("Start New", use_container_width=True):
             st.session_state.generated_review = None
             st.rerun()
     
     st.divider()
     
     # Review preview
-    st.header("📖 Review Preview")
+    st.header("Review Preview")
     
     st.markdown('<div class="review-preview">', unsafe_allow_html=True)
     st.markdown(review_result['content'])

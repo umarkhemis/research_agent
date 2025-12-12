@@ -10,7 +10,7 @@ from database.database import db
 from utils.error_handler import logger
 import io
 
-st.set_page_config(page_title="Search Papers", page_icon="🔍", layout="wide")
+st.set_page_config(page_title="Search Papers", page_icon=None, layout="wide")
 
 # Apply dark mode if enabled
 if st.session_state.get('dark_mode', False):
@@ -23,6 +23,7 @@ if st.session_state.get('dark_mode', False):
 
 # Custom CSS
 st.markdown("""
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
     .paper-card {
         background-color: var(--background-color);
@@ -62,12 +63,12 @@ if 'current_project' not in st.session_state:
     st.session_state.current_project = None
 
 def main():
-    st.title("🔍 Search Academic Papers")
+    st.title("Search Academic Papers")
     st.markdown("Search across multiple databases with AI-powered analysis")
     
     # Sidebar configuration
     with st.sidebar:
-        st.header("⚙️ Search Configuration")
+        st.header("Search Configuration")
         
         # Database selection
         st.subheader("Databases")
@@ -83,7 +84,7 @@ def main():
         st.divider()
         
         # Search settings
-        st.subheader("🔧 Settings")
+        st.subheader("Settings")
         limit = st.slider("Number of papers", 1, config.MAX_PAPER_LIMIT, 10)
         
         summary_level = st.selectbox(
@@ -99,7 +100,7 @@ def main():
         st.divider()
         
         # Filters
-        st.subheader("🎯 Filters")
+        st.subheader("Filters")
         
         col1, col2 = st.columns(2)
         with col1:
@@ -112,7 +113,7 @@ def main():
         st.divider()
         
         # Save to project
-        st.subheader("💾 Save Results")
+        st.subheader("Save Results")
         projects = db.get_all_projects()
         project_options = ["Don't save"] + [f"{p.name} (ID: {p.id})" for p in projects]
         selected_project = st.selectbox("Save to project", project_options)
@@ -124,7 +125,7 @@ def main():
         st.divider()
         
         # Cache management
-        st.subheader("📦 Cache")
+        st.subheader("Cache")
         cache_stats = cache.get_cache_stats()
         st.metric("Cached Items", cache_stats['topic_cache_files'] + cache_stats['paper_cache_files'])
         
@@ -139,7 +140,7 @@ def main():
     col1, col2 = st.columns([5, 1])
     with col1:
         query = st.text_input(
-            "🔍 Enter your research topic",
+            "Enter your research topic",
             placeholder="e.g., 'machine learning for drug discovery'",
             label_visibility="collapsed"
         )
@@ -147,7 +148,7 @@ def main():
         search_button = st.button("Search", type="primary", use_container_width=True)
     
     # Example queries
-    with st.expander("💡 Example Queries"):
+    with st.expander("Example Queries"):
         examples = [
             "transformer models in natural language processing",
             "CRISPR gene editing applications",
@@ -169,15 +170,15 @@ def main():
             st.session_state.search_query = None
         
         if not query:
-            st.warning("⚠️ Please enter a search topic")
+            st.warning("Please enter a search topic")
             return
         
         if not databases:
-            st.warning("⚠️ Please select at least one database")
+            st.warning("Please select at least one database")
             return
         
         # Perform search
-        with st.spinner(f"🔍 Searching for papers on '{query}'..."):
+        with st.spinner(f"Searching for papers on '{query}'..."):
             try:
                 start_time = datetime.now()
                 
@@ -242,7 +243,7 @@ def main():
         # Results header with actions
         col1, col2, col3, col4 = st.columns([2, 1, 1, 1])
         with col1:
-            st.header(f"📚 Results ({len(papers)} papers)")
+            st.header(f"Results ({len(papers)} papers)")
         with col2:
             # Sort options
             sort_by = st.selectbox(
@@ -297,13 +298,13 @@ def display_paper(paper, index):
             venue = paper.get('venue', 'Unknown')
             citations = paper.get('citation_count', 0)
             
-            st.markdown(f"**{authors}** • {year} • {venue} • 📝 {citations} citations")
+            st.markdown(f"**{authors}** • {year} • {venue} • {citations} citations")
         
         with col2:
-            st.markdown(f"[📄 View]({paper.get('url', '#')})")
+            st.markdown(f"[View Paper]({paper.get('url', '#')})")
         
         # Tabs
-        tabs = st.tabs(["📝 Summary", "🔬 Analysis", "💾 Export", "💼 Actions"])
+        tabs = st.tabs(["Summary", "Analysis", "Export", "Actions"])
         
         with tabs[0]:  # Summary
             if paper.get('abstract_summary'):

@@ -4,7 +4,7 @@ from database.database import db
 from agents.export_agent import export_agent
 from utils.error_handler import logger
 
-st.set_page_config(page_title="Projects", page_icon="📚", layout="wide")
+st.set_page_config(page_title="Projects", page_icon=None, layout="wide")
 
 # Apply dark mode if enabled
 if st.session_state.get('dark_mode', False):
@@ -17,6 +17,7 @@ if st.session_state.get('dark_mode', False):
 
 # Custom CSS
 st.markdown("""
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
     .project-card {
         background-color: var(--background-color);
@@ -59,12 +60,12 @@ if 'show_create_form' not in st.session_state:
 
 
 def main():
-    st.title("📚 Research Projects")
+    st.title("Research Projects")
     st.markdown("Organize and manage your research papers")
     
     # Sidebar
     with st.sidebar:
-        st.header("📊 Projects Overview")
+        st.header("Projects Overview")
         
         try:
             stats = db.get_statistics()
@@ -77,16 +78,16 @@ def main():
         st.divider()
         
         # Quick actions
-        st.subheader("⚡ Quick Actions")
-        if st.button("➕ New Project", use_container_width=True):
+        st.subheader("Quick Actions")
+        if st.button("New Project", use_container_width=True):
             st.session_state.show_create_form = True
             st.session_state.selected_project = None
             st.rerun()
         
-        if st.button("🔍 Search Papers", use_container_width=True):
+        if st.button("Search Papers", use_container_width=True):
             st.switch_page("pages/Search.py")
         
-        if st.button("📝 Generate Review", use_container_width=True):
+        if st.button("Generate Review", use_container_width=True):
             st.switch_page("pages/Literature_Review.py")
     
     # Main content
@@ -100,7 +101,7 @@ def main():
 
 def show_create_project_form():
     """Display form to create a new project"""
-    st.header("➕ Create New Project")
+    st.header("Create New Project")
     
     with st.form("create_project_form"):
         name = st.text_input("Project Name*", placeholder="e.g., PhD Literature Review")
@@ -118,19 +119,19 @@ def show_create_project_form():
         
         if submit:
             if not name:
-                st.error("⚠️ Project name is required")
+                st.error("Project name is required")
             else:
                 try:
                     project = db.create_project(name=name, description=description, tags=tags)
                     if project:
-                        st.success(f"✅ Project '{name}' created successfully!")
+                        st.success(f"Project '{name}' created successfully!")
                         st.session_state.show_create_form = False
                         st.session_state.selected_project = project.id
                         st.rerun()
                     else:
-                        st.error("❌ Failed to create project")
+                        st.error("Failed to create project")
                 except Exception as e:
-                    st.error(f"❌ Error: {str(e)}")
+                    st.error(f"Error: {str(e)}")
         
         if cancel:
             st.session_state.show_create_form = False
@@ -139,14 +140,14 @@ def show_create_project_form():
 
 def show_projects_list():
     """Display list of all projects"""
-    st.header("📂 Your Projects")
+    st.header("Your Projects")
     
     try:
         projects = db.get_all_projects()
         
         if not projects:
-            st.info("📭 No projects yet. Create your first project to get started!")
-            if st.button("➕ Create First Project"):
+            st.info("No projects yet. Create your first project to get started!")
+            if st.button("Create First Project"):
                 st.session_state.show_create_form = True
                 st.rerun()
             return
@@ -154,7 +155,7 @@ def show_projects_list():
         # Search/filter bar
         col1, col2 = st.columns([3, 1])
         with col1:
-            search_term = st.text_input("🔍 Search projects", placeholder="Search by name or tags...", label_visibility="collapsed")
+            search_term = st.text_input("Search projects", placeholder="Search by name or tags...", label_visibility="collapsed")
         with col2:
             sort_by = st.selectbox("Sort by", ["Recent", "Name", "Papers Count"], label_visibility="collapsed")
         
@@ -266,7 +267,7 @@ def show_project_details():
         st.divider()
         
         # Tabs for different views
-        tabs = st.tabs(["📚 Papers", "📝 Notes", "📊 Statistics", "⚙️ Settings"])
+        tabs = st.tabs(["Papers", "Notes", "Statistics", "Settings"])
         
         with tabs[0]:  # Papers
             show_project_papers(project)
@@ -290,8 +291,8 @@ def show_project_papers(project):
     papers = db.get_project_papers(project.id)
     
     if not papers:
-        st.info("📭 No papers in this project yet. Add papers from the Search page!")
-        if st.button("🔍 Go to Search"):
+        st.info("No papers in this project yet. Add papers from the Search page!")
+        if st.button("Go to Search"):
             st.switch_page("pages/Search.py")
         return
     
@@ -337,10 +338,10 @@ def show_project_papers(project):
 
 def show_project_notes(project):
     """Display and manage project notes"""
-    st.subheader("📝 Project Notes")
+    st.subheader("Project Notes")
     
     # Add new note
-    with st.expander("➕ Add New Note"):
+    with st.expander("Add New Note"):
         with st.form("add_note_form"):
             note_title = st.text_input("Note Title")
             note_content = st.text_area("Note Content", height=150)
@@ -401,7 +402,7 @@ def show_project_statistics(project):
     st.divider()
     
     # Year distribution
-    st.subheader("📅 Year Distribution")
+    st.subheader("Year Distribution")
     if years:
         import plotly.express as px
         year_counts = {}
@@ -417,7 +418,7 @@ def show_project_statistics(project):
         st.plotly_chart(fig, use_container_width=True)
     
     # Top venues
-    st.subheader("📊 Top Venues")
+    st.subheader("Top Venues")
     venues = {}
     for paper in papers:
         if paper.venue:
@@ -431,7 +432,7 @@ def show_project_statistics(project):
 
 def show_project_settings(project):
     """Display project settings"""
-    st.subheader("⚙️ Project Settings")
+    st.subheader("Project Settings")
     
     # Edit project
     with st.form("edit_project_form"):
@@ -442,7 +443,7 @@ def show_project_settings(project):
         tags_input = st.text_input("Tags (comma-separated)", value=current_tags)
         new_tags = [tag.strip() for tag in tags_input.split(",") if tag.strip()]
         
-        if st.form_submit_button("💾 Save Changes", type="primary"):
+        if st.form_submit_button("Save Changes", type="primary"):
             db.update_project(
                 project.id,
                 name=new_name,
@@ -455,12 +456,12 @@ def show_project_settings(project):
     st.divider()
     
     # Danger zone
-    st.subheader("⚠️ Danger Zone")
+    st.subheader("Danger Zone")
     st.warning("These actions cannot be undone!")
     
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("🗑️ Delete Project", type="secondary", use_container_width=True):
+        if st.button("Delete Project", type="secondary", use_container_width=True):
             if st.session_state.get('confirm_delete_project'):
                 db.delete_project(project.id)
                 st.success("Project deleted!")
